@@ -1,0 +1,12 @@
+<app-header></app-header>
+<div id="todo-container">
+    <div id="todo-list">
+        <li *ngFor="let todo of todos">{{todo.todo}}</li>
+    </div>
+    <div id="todo-form" class="form-group" [formGroup]="form">
+        <input type="text" class="form-control" formControlName="todo" (keyup.enter)="addTodo()" placeholder="add to-do item…">
+        <button class="btn btn-primary" (click)="addTodo()" type="button">
+            <fa-icon [icon]="faPlus"></fa-icon>
+        </button>
+    </div>
+</div>

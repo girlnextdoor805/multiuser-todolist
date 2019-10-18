@@ -1,0 +1,32 @@
+:host {
+    div#todo-container {
+        display: flex;
+        flex-direction: column;
+        // justify-content: center;
+        // align-content: center;
+        height: calc(100% - 56px);
+        padding: 40px;
+
+        > #todo-list {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        > div#todo-form {
+            display: flex;
+            flex-direction: row;
+            // flex: 1;
+            border-radius: 0px;
+            input {
+                flex: 1;
+                border-radius: 0;
+            }
+
+            button {
+                border-radius: 0;
+            }
+        }
+
+    }
+}

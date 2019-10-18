@@ -1,0 +1,53 @@
+import { Injectable } from "@angular/core";
+import { Client, jexiaClient } from "jexia-sdk-js/browser";
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
+@Injectable({
+  providedIn: "root"
+})
+export class JexiaService {
+  client: Client;
+  
+  readonly projectID = environment.jexia.projectID;
+  readonly key = environment.jexia.key;
+  readonly secret = environment.jexia.secret;
+
+  todosDataSet = 'todos'
+  base = `https://${this.projectID}.app.jexia.com`;
+  ws = `wss://${this.projectID}.app.jexia.com`;
+
+  dataSetEndpoint = `https://${this.projectID}.app.jexia.com/ds/${this.todosDataSet}`;
+
+  constructor(
+    private http: HttpClient
+  ) {
+    this.setupJexia();
+  }
+
+  async setupJexia() {
+    try {
+      this.client = await jexiaClient().init({
+        projectID: this.projectID,
+        key: this.key,
+        secret: this.secret
+      })
+      console.log('cliente', this.client)
+    } catch (error) {
+      console.log('error', error)
+      
+    }
+  }
+
+  setAccessToken(token: string) {
+    localStorage.setItem('access_token', token);
+  }
+
+  getAccessToken() {
+    return localStorage.getItem('access_token')
+  }
+
+  getRTC() {
+    return `${this.ws}/rtc?access_token=${this.getAccessToken()}`
+  }
+}
