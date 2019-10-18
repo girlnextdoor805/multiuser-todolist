@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { JexiaService } from './jexia.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { WebSocketSubject } from "rxjs/webSocket";
+import { BehaviorSubject } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 // import { Socket } from 'ngx-socket-io';
 
 @Injectable({
@@ -11,6 +13,7 @@ export class TodoService {
   dataset: string;
 
   subject: WebSocket;
+  todos: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(null);
 
   constructor(
     private http: HttpClient,
@@ -27,8 +30,11 @@ export class TodoService {
   }
   
   getTodos() {
+    console.log('buscar todos');
     const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`)
-    return this.http.get<any[]>(this.dataset, {headers})
+    this.http.get<any[]>(this.dataset, {headers}).subscribe(todos => this.todos.next(todos))
+
+    
   }
 
   subscribeToTodos() {
@@ -48,9 +54,10 @@ export class TodoService {
 
     this.subject.onmessage = ev => {
       const event = JSON.parse(ev.data)
+      console.log('yo', event)
       console.log(event.data.action)
       switch (event.data.action) {
-        case 'created': console.log(event);
+        case 'created': console.log(event); this.getTodos()
           
           break;
       

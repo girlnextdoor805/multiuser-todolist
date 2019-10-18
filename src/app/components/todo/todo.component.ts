@@ -5,6 +5,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { JexiaService } from 'src/app/services/jexia.service';
 import { TodoService } from 'src/app/services/todo.service';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { TodoService } from 'src/app/services/todo.service';
 export class TodoComponent implements OnInit {
   faPlus = faPlus;
   form: FormGroup;
-  todos = [];
+  todos: BehaviorSubject<any[]> //= new BehaviorSubject([]);
 
 
   constructor(
@@ -31,15 +32,18 @@ export class TodoComponent implements OnInit {
     })
     console.log(this.jexia.client)
 
-    this.todoService.getTodos().subscribe(response => {
-      this.todos = response;
-      this.todoService.subscribeToTodos()
-    }, error => {
-      console.log(error)
-      if (error.status === 401) {
-        this.router.navigate(['/signin'])
-      }
-    })
+    this.todos = this.todoService.todos;
+
+    this.todoService.getTodos()
+    // .subscribe(response => {
+    //   this.todos = response;
+    this.todoService.subscribeToTodos()
+    // }, error => {
+    //   console.log(error)
+    //   if (error.status === 401) {
+    //     this.router.navigate(['/signin'])
+    //   }
+    // })
   }
 
   addTodo() {
