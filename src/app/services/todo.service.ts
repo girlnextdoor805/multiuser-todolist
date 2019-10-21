@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JexiaService } from './jexia.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { WebSocketSubject } from "rxjs/webSocket";
 import { BehaviorSubject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -10,23 +10,33 @@ import { switchMap, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TodoService {
-  dataset: string;
 
-  subject: WebSocket;
+  socket: WebSocket;
   todos: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(null);
+  dataset = `${this.jexiaService.base}/ds/todos`;
 
   constructor(
     private http: HttpClient,
     private jexiaService: JexiaService,
-    // private socket: Socket
   ) {
-    this.dataset = this.jexiaService.base + '/ds/todos'
-    this.subject = new WebSocket(this.jexiaService.getRTC())
+    this.setupSocket();
+  }
+
+  setupSocket() {
+    try {
+      this.socket = new WebSocket(this.jexiaService.getRTC())
+    } catch (error) {
+      console.warn(error)
+    }
   }
 
   addTodo(todo: string) {
     const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`)
-    return this.http.post(this.dataset, {todo}, {headers})
+    return this.http.post(this.dataset, {
+      todo, 
+      completed: false,
+      order: 1
+    }, {headers})
   }
   
   getTodos() {
@@ -38,7 +48,7 @@ export class TodoService {
   }
 
   subscribeToTodos() {
-    this.subject.onopen = ev => this.subject.send(JSON.stringify({
+    this.socket.onopen = ev => this.socket.send(JSON.stringify({
       "type": "command",
       "data": {
         "command": "subscribe",
@@ -52,14 +62,13 @@ export class TodoService {
       }
     }))
 
-    this.subject.onmessage = ev => {
+    this.socket.onmessage = ev => {
       const event = JSON.parse(ev.data)
       console.log('yo', event)
       console.log(event.data.action)
       switch (event.data.action) {
-        case 'created': console.log(event); this.getTodos()
-          
-          break;
+        case 'created': console.log(event); this.getTodos(); break;
+        case 'updated': console.log(event); this.getTodos(); break;
       
         default:
           break;
@@ -69,19 +78,10 @@ export class TodoService {
     }
   }
 
-  // connect() {
-  //   if (!this.subject) {
-  //     this.subject = 
-  //   }
-  // }
-
-  // private create(url) {
-  //   const ws = new WebSocket(url);
-
-
-  //   const observable
-  // }
-
-
-
+  markAsCompleted(todo: any) {
+    console.log('vou marcar o ', todo.id)
+    const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`)
+    const params = new HttpParams().append('cond',`[{"field":"id"},"=","${todo.id}"]`);
+    return this.http.patch(this.dataset, {completed: todo.completed}, {headers, params})
+  }
 }

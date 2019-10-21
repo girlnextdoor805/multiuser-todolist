@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { JexiaService } from 'src/app/services/jexia.service';
 import { TodoService } from 'src/app/services/todo.service';
@@ -15,8 +15,9 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class TodoComponent implements OnInit {
   faPlus = faPlus;
+  faArrowsAlt = faArrowsAlt;
   form: FormGroup;
-  todos: BehaviorSubject<any[]> //= new BehaviorSubject([]);
+  todos$: BehaviorSubject<any[]> //= new BehaviorSubject([]);
 
 
   constructor(
@@ -32,7 +33,7 @@ export class TodoComponent implements OnInit {
     })
     console.log(this.jexia.client)
 
-    this.todos = this.todoService.todos;
+    this.todos$ = this.todoService.todos;
 
     this.todoService.getTodos()
     // .subscribe(response => {
@@ -54,5 +55,16 @@ export class TodoComponent implements OnInit {
       this.form.reset();
     })
   }
+  checkCenas(cenas) {
+    console.log(cenas)
+  }
+  markAsCompleted(todo: any) {
+    console.log(todo)
+    todo.completed = !todo.completed;
+    this.todoService.markAsCompleted(todo).subscribe(response => {
+      console.log(response)
+    })
+  }
+
 
 }

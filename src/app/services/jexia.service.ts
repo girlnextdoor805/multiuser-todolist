@@ -48,6 +48,12 @@ export class JexiaService {
   }
 
   getRTC() {
-    return `${this.ws}/rtc?access_token=${this.getAccessToken()}`
+    const token = this.getAccessToken();
+
+    if (!token) {
+      throw new Error("No token");
+      
+    }
+    return `${this.ws}/rtc?access_token=${token}`
   }
 }

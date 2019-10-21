@@ -1,12 +1,28 @@
-<app-header></app-header>
+<!-- <app-header></app-header> -->
+<mat-toolbar color="primary">To-do List</mat-toolbar>
+
 <div id="todo-container">
-    <div id="todo-list">
-        <li *ngFor="let todo of todos | async">{{todo.todo}}</li>
+    <div id="todo-list" *ngIf="(todos$| async)?.length">
+        <mat-selection-list class="list" cdkDropList (selectionChange)="checkCenas($ev)">
+            <h3 matSubheader>Today</h3>
+            <mat-list-option cdkDrag *ngFor="let todo of todos$ | async" (click)="markAsCompleted(todo)" [selected]="todo.completed">
+                <span mat-line>{{todo.id}}</span>
+                <span mat-line>{{todo.todo}}</span>
+                <span mat-line>{{todo.completed}}</span>
+            </mat-list-option>
+        </mat-selection-list>
+        <mat-divider></mat-divider>
     </div>
-    <div id="todo-form" class="form-group" [formGroup]="form">
-        <input type="text" class="form-control" formControlName="todo" (keyup.enter)="addTodo()" placeholder="add to-do item…">
-        <button class="btn btn-primary" (click)="addTodo()" type="button">
-            <fa-icon [icon]="faPlus"></fa-icon>
-        </button>
+    <div id="no-items" *ngIf="!(todos$| async)?.length">
+        <img src="assets/Icon-no-todo-items.png" alt="">
+        <span>{{todos$.length | json}}</span>
     </div>
 </div>
+<mat-card id="todo-form" [formGroup]="form">
+    <mat-form-field class="example-full-width">
+        <input matInput placeholder="Favorite food" formControlName="todo">
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="addTodo()" type="button">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">add</mat-icon>
+    </button>
+</mat-card>

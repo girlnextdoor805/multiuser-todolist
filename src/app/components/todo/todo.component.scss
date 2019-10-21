@@ -1,32 +1,61 @@
 :host {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     div#todo-container {
         display: flex;
         flex-direction: column;
         // justify-content: center;
         // align-content: center;
         height: calc(100% - 56px);
-        padding: 40px;
+        // padding: 40px;
+        overflow-y: scroll;
 
         > #todo-list {
             display: flex;
             flex: 1;
             flex-direction: column;
+            padding: 40px;
+            .list {
+                // border: solid 1px #ccc;
+
+                > mat-list-option {
+                    border-bottom: solid 1px #ccc;
+                }
+            }
         }
 
-        > div#todo-form {
+        div#no-items {
             display: flex;
-            flex-direction: row;
-            // flex: 1;
-            border-radius: 0px;
-            input {
-                flex: 1;
-                border-radius: 0;
-            }
+            flex-direction: column;
+            align-items: center;
 
-            button {
-                border-radius: 0;
+            span {
+                text-transform: uppercase;
             }
         }
+    }
 
+    mat-card#todo-form {
+        display: flex;
+        flex-direction: row;
+        // flex: 1;
+        border-radius: 0px;
+        position: sticky;
+        bottom: 0;
+        margin: 0;
+        mat-form-field {
+            flex: 1;
+        }
+
+        mat-input {
+            flex: 1;
+            border-radius: 0;
+            height: 50px;
+        }
+
+        button {
+            border-radius: 0;
+        }
     }
 }
