@@ -20,9 +20,15 @@
 </div>
 <mat-card id="todo-form" [formGroup]="form">
     <mat-form-field class="example-full-width">
-        <input matInput placeholder="Favorite food" formControlName="todo">
+        <input matInput placeholder="What?" formControlName="todo">
     </mat-form-field>
-    <button mat-flat-button color="primary" (click)="addTodo()" type="button">
+    <mat-form-field>
+        <input matInput (focus)="picker.open()" [matDatepicker]="picker" formControlName="date" placeholder="When?">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+          
+    <button mat-fab color="primary" (click)="addTodo()" type="button">
         <mat-icon aria-hidden="false" aria-label="Example home icon">add</mat-icon>
     </button>
 </mat-card>

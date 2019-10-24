@@ -29,7 +29,8 @@ export class TodoComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      todo: []
+      todo: null,
+      date: null
     })
     console.log(this.jexia.client)
 

@@ -2,10 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule} from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatToolbarModule, MatListModule, MatInputModule, MatButtonModule, MatDividerModule, MatLineModule, MatIconModule, MatCardModule } from "@angular/material";
+import { MatToolbarModule, MatListModule, MatInputModule, MatButtonModule, MatDividerModule, MatLineModule, MatIconModule, MatCardModule, MatDatepickerModule, MatNativeDateModule } from "@angular/material";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+// import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,7 +18,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-const config: SocketIoConfig = { url: environment.jexia.projectURL, options: {} };
+// const config: SocketIoConfig = { url: environment.jexia.projectURL, options: {} };
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,18 +35,24 @@ const config: SocketIoConfig = { url: environment.jexia.projectURL, options: {} 
     AppRoutingModule,
     FontAwesomeModule,
     BrowserAnimationsModule,
-    MatToolbarModule,
-    MatListModule,
-    MatInputModule,
     MatButtonModule,
-    MatDividerModule,
-    MatLineModule,
-    MatIconModule,
     MatCardModule,
+    MatDatepickerModule,
+    MatDividerModule,
+    MatIconModule,
+    MatInputModule,
+    MatLineModule,
+    MatNativeDateModule,
+    MatListModule,
+    MatToolbarModule,
     DragDropModule,
+
     // SocketIoModule.forRoot(config)
   ],
-  providers: [JexiaService],
+  providers: [
+    MatNativeDateModule,
+    JexiaService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
