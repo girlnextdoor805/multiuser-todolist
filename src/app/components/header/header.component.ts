@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -7,11 +8,17 @@ import { faAlignLeft } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  faAlignLeft = faAlignLeft
 
-  constructor() { }
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
   }
 
+  signOut() {
+    this.authService.signOut();
+    this.router.navigate(['/signin']);
+  }
 }

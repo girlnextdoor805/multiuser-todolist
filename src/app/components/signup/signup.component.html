@@ -1,19 +1,13 @@
 <div id="form-container" [formGroup]="form">
     <h1>Sign-up new user</h1>
-    <div class="form-group">
-        <!-- <label for="formGroupExampleInput">Example label</label> -->
-        <input type="text" class="form-control" formControlName="email" id="formGroupExampleInput" placeholder="Email">
-    </div>
-    <div class="form-group">
-        <!-- <label for="formGroupExampleInput2">Another label</label> -->
-        <input type="password" class="form-control" formControlName="password" id="formGroupExampleInput2" placeholder="Password">
-    </div>
-    <div class="form-group">
-        <!-- <label for="formGroupExampleInput2">Another label</label> -->
-        <input type="password" class="form-control" formControlName="confirm" id="formGroupExampleInput3" placeholder="Password">
-    </div>
-    <button class="btn btn-primary" (click)="signup()" type="button">Sign Up</button>
+    <mat-form-field class="example-full-width">
+        <input matInput type="email" formControlName="email" placeholder="Email">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <input matInput type="password" formControlName="password" placeholder="Password">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <input matInput type="password" formControlName="confirm" placeholder="Confirm Password">
+    </mat-form-field>
+    <button mat-raised-button [disabled]="!form.valid" (click)="signup()" color="primary" type="button">Sign Up</button>
 </div>
-<!-- <div class="form-group">
-    <button class="btn btn-primary" type="button">Signin</button>
-</div> -->

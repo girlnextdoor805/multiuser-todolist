@@ -16,13 +16,22 @@
             flex: 1;
             flex-direction: column;
             padding: 40px;
-            .list {
+       
                 // border: solid 1px #ccc;
 
-                > mat-list-option {
-                    border-bottom: solid 1px #ccc;
+            mat-selection-list ::ng-deep {
+                div.mat-list-text {
+                    align-items: center;
+                    flex-direction: row;
+                    div.todo-detail {
+                        flex: 1;
+                    }
                 }
             }
+
+                
+            
+            
         }
 
         div#no-items {

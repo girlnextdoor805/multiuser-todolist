@@ -1,14 +1,16 @@
-<!-- <app-header></app-header> -->
-<mat-toolbar color="primary">To-do List</mat-toolbar>
+<app-header></app-header>
 
 <div id="todo-container">
     <div id="todo-list" *ngIf="(todos$| async)?.length">
-        <mat-selection-list class="list" cdkDropList (selectionChange)="checkCenas($ev)">
+        <mat-selection-list class="list" cdkDropList>
             <h3 matSubheader>Today</h3>
             <mat-list-option cdkDrag *ngFor="let todo of todos$ | async" (click)="markAsCompleted(todo)" [selected]="todo.completed">
-                <span mat-line>{{todo.id}}</span>
-                <span mat-line>{{todo.todo}}</span>
-                <span mat-line>{{todo.completed}}</span>
+                <div class="todo-detail">
+                    <span mat-line>{{todo.id}}</span>
+                    <span mat-line>{{todo.todo}}</span>
+                    <span mat-line>{{todo.completed}}</span>
+                </div>
+                <button mat-icon-button (click)="deleteTodo($event, todo.id)"><mat-icon>delete</mat-icon></button>
             </mat-list-option>
         </mat-selection-list>
         <mat-divider></mat-divider>

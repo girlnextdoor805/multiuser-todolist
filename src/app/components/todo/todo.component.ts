@@ -61,9 +61,17 @@ export class TodoComponent implements OnInit {
   }
   markAsCompleted(todo: any) {
     console.log(todo)
-    todo.completed = !todo.completed;
-    this.todoService.markAsCompleted(todo).subscribe(response => {
-      console.log(response)
+    // todo.completed = !todo.completed;
+    // this.todoService.markAsCompleted(todo).subscribe(response => {
+    //   console.log(response)
+    // })
+  }
+
+  deleteTodo($event, item) {
+    $event.preventDefault();
+    $event.stopImmediatePropagation();
+    this.todoService.deleteTodo(item).subscribe(response => {
+      console.log('yo resposta', response)
     })
   }
 

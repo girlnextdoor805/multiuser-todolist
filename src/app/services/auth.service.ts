@@ -25,6 +25,10 @@ export class AuthService {
     return this.http.post<authenticateUMSResponseObject>(`${this.jexiaService.base}/auth`, user).pipe(tap(res => this.jexiaService.setAccessToken(res.access_token)))
   }
 
+  signOut() {
+    localStorage.removeItem('idToken');
+  }
+
 
 
 }

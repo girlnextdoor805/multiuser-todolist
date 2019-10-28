@@ -38,6 +38,12 @@ export class TodoService {
       order: 1
     }, {headers})
   }
+
+  deleteTodo(id: string) {
+    const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`)
+    const params = new HttpParams().append('cond',`[{"field":"id"},"=","${id}"]`);
+    return this.http.delete(this.dataset, {headers, params});
+  }
   
   getTodos() {
     console.log('buscar todos');
@@ -69,6 +75,7 @@ export class TodoService {
       switch (event.data.action) {
         case 'created': console.log(event); this.getTodos(); break;
         case 'updated': console.log(event); this.getTodos(); break;
+        case 'deleted': console.log(event); this.getTodos(); break;
       
         default:
           break;
