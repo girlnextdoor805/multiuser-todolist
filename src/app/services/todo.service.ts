@@ -5,6 +5,8 @@ import { WebSocketSubject } from "rxjs/webSocket";
 import { BehaviorSubject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 // import { Socket } from 'ngx-socket-io';
+import { AddTodoRequestObject } from "../interfaces/todo";
+import { groupBy } from 'lodash-es';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,7 @@ import { switchMap, tap } from 'rxjs/operators';
 export class TodoService {
 
   socket: WebSocket;
-  todos: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(null);
+  todos$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   dataset = `${this.jexiaService.base}/ds/todos`;
 
   constructor(
@@ -30,13 +32,10 @@ export class TodoService {
     }
   }
 
-  addTodo(todo: string) {
+  addTodo(todo: AddTodoRequestObject) {
     const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`)
-    return this.http.post(this.dataset, {
-      todo, 
-      completed: false,
-      order: 1
-    }, {headers})
+    todo = {...todo, completed: false, order: 1};
+    return this.http.post<AddTodoRequestObject>(this.dataset, todo, {headers})
   }
 
   deleteTodo(id: string) {
@@ -48,21 +47,25 @@ export class TodoService {
   getTodos() {
     console.log('buscar todos');
     const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`)
-    this.http.get<any[]>(this.dataset, {headers}).subscribe(todos => this.todos.next(todos))
+    this.http.get<any[]>(this.dataset, {headers}).subscribe(todos => {
+      const grouped = groupBy(todos, 'date')
+      console.log(grouped);
+      this.todos$.next(grouped)
+    })
 
     
   }
 
   subscribeToTodos() {
     this.socket.onopen = ev => this.socket.send(JSON.stringify({
-      "type": "command",
-      "data": {
-        "command": "subscribe",
-        "arguments": {
-          "action": [ "created", "updated", "deleted" ],
-          "resource": {
-            "type": "ds",
-            "name": "todos"
+      type: "command",
+      data: {
+        command: "subscribe",
+        arguments: {
+          action: [ "created", "updated", "deleted" ],
+          resource: {
+            type: "ds",
+            name: "todos"
           }
         }
       }

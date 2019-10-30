@@ -17,6 +17,7 @@ import { JexiaService } from './services/jexia.service';
 import { SignupComponent } from './components/signup/signup.component';
 import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MomentModule } from "ngx-moment";
 
 // const config: SocketIoConfig = { url: environment.jexia.projectURL, options: {} };
 @NgModule({
@@ -34,6 +35,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     AppRoutingModule,
     FontAwesomeModule,
+    MomentModule,
     BrowserAnimationsModule,
     MatButtonModule,
     MatCardModule,

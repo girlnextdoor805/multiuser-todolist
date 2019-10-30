@@ -1,23 +1,40 @@
 <app-header></app-header>
-
 <div id="todo-container">
-    <div id="todo-list" *ngIf="(todos$| async)?.length">
-        <mat-selection-list class="list" cdkDropList>
-            <h3 matSubheader>Today</h3>
-            <mat-list-option cdkDrag *ngFor="let todo of todos$ | async" (click)="markAsCompleted(todo)" [selected]="todo.completed">
+    <div id="todo-list" *ngIf="todos">
+        <ng-container *ngFor="let todos of todos | keyvalue">
+            <mat-selection-list 
+                cdkDropList class="list" 
+                [cdkDropListData]="todos.value" 
+                (cdkDropListDropped)="drop($event, todos.value)">
+                <h3 matSubheader *ngIf="todos.key !== 'null'">
+                    {{todos.key | amCalendar:{sameDay:'[Same Day at] h:mm '} }}
+                </h3>
+                <h3 matSubheader *ngIf="todos.key === 'null'">No Due Date</h3>
+
+                <mat-list-option cdkDrag *ngFor="let todo of todos.value" [selected]="todo.completed" (click)="markAsCompleted(todo)">
+                    <div class="todo-detail">
+                        <span mat-line>{{todo.todo}}</span>
+                    </div>
+                    <button mat-icon-button mat-datepicker-toggle><mat-icon>today</mat-icon></button>
+                    <button mat-icon-button (click)="deleteTodo($event, todo.id)"><mat-icon>delete</mat-icon></button>
+                </mat-list-option> 
+            </mat-selection-list>
+        </ng-container>
+            
+            <!-- <h3 matSubheader>Today</h3>
+            <mat-list-option cdkDrag *ngFor="let todo of todos | keyvalue" (click)="markAsCompleted(todo)" [selected]="todo.completed">
                 <div class="todo-detail">
-                    <span mat-line>{{todo.id}}</span>
-                    <span mat-line>{{todo.todo}}</span>
-                    <span mat-line>{{todo.completed}}</span>
+                    <span mat-line>{{todo.key}}</span>
+                    <span mat-line>{{todo,value | json}}</span>
+                    <span mat-line>{{todo}}</span>
+                    <span mat-line>{{todo}}</span>
                 </div>
                 <button mat-icon-button (click)="deleteTodo($event, todo.id)"><mat-icon>delete</mat-icon></button>
-            </mat-list-option>
-        </mat-selection-list>
+            </mat-list-option> -->
         <mat-divider></mat-divider>
     </div>
-    <div id="no-items" *ngIf="!(todos$| async)?.length">
+    <div id="no-items" *ngIf="!todos">
         <img src="assets/Icon-no-todo-items.png" alt="">
-        <span>{{todos$.length | json}}</span>
     </div>
 </div>
 <mat-card id="todo-form" [formGroup]="form">
@@ -29,7 +46,6 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-          
     <button mat-fab color="primary" (click)="addTodo()" type="button">
         <mat-icon aria-hidden="false" aria-label="Example home icon">add</mat-icon>
     </button>

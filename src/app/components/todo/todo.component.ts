@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { faPlus, faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { JexiaService } from 'src/app/services/jexia.service';
 import { TodoService } from 'src/app/services/todo.service';
 import { BehaviorSubject } from 'rxjs';
+import { AddTodoRequestObject } from 'src/app/interfaces/todo';
+import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -14,10 +15,8 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./todo.component.scss']
 })
 export class TodoComponent implements OnInit {
-  faPlus = faPlus;
-  faArrowsAlt = faArrowsAlt;
   form: FormGroup;
-  todos$: BehaviorSubject<any[]> //= new BehaviorSubject([]);
+  todos: any; //= new BehaviorSubject([]);
 
 
   constructor(
@@ -28,13 +27,18 @@ export class TodoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log(this.todos)
     this.form = this.formBuilder.group({
       todo: null,
       date: null
     })
     console.log(this.jexia.client)
 
-    this.todos$ = this.todoService.todos;
+    // this.todos$ = this.todoService.todos$;
+    this.todoService.todos$.subscribe(r => {
+      console.log(r)
+      this.todos = r
+    })
 
     this.todoService.getTodos()
     // .subscribe(response => {
@@ -50,8 +54,9 @@ export class TodoComponent implements OnInit {
 
   addTodo() {
     // this.todos.push(this.form.get('todo').value);
+    const todo = this.form.value as AddTodoRequestObject;
 
-    this.todoService.addTodo(this.form.get('todo').value).subscribe(response => {
+    this.todoService.addTodo(todo).subscribe(response => {
       console.log(response)
       this.form.reset();
     })
@@ -73,6 +78,10 @@ export class TodoComponent implements OnInit {
     this.todoService.deleteTodo(item).subscribe(response => {
       console.log('yo resposta', response)
     })
+  }
+  drop(event: CdkDragDrop<any[]>, todos) {
+    console.log(event, todos)
+    // moveItemInArray(this.todos1.value, event.previousIndex, event.currentIndex);
   }
 
 
