@@ -14,21 +14,16 @@ export class AuthService {
     private jexiaService: JexiaService
   ) { }
 
-
   signUp(user: signUpRequestObject) {
     return this.http.post<signUpResponseObject>(`${this.jexiaService.base}/ums/signup`, user)
   }
 
   authenticate(user: authenticateUMSRequestObject) {
-    user = {...user, method: 'ums'}
-    console.log(user)
+    user = {...user, method: 'ums'};
     return this.http.post<authenticateUMSResponseObject>(`${this.jexiaService.base}/auth`, user).pipe(tap(res => this.jexiaService.setAccessToken(res.access_token)))
   }
 
   signOut() {
-    localStorage.removeItem('idToken');
+    this.jexiaService.removeAccessToken();
   }
-
-
-
 }

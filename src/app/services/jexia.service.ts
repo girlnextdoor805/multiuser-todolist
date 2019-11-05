@@ -47,6 +47,10 @@ export class JexiaService {
     return localStorage.getItem('access_token')
   }
 
+  removeAccessToken() {
+    localStorage.removeItem('access_token')
+  }
+
   getRTC() {
     const token = this.getAccessToken();
 

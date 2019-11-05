@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { filter, map } from 'rxjs/operators';
+import { moveItemInArray, CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
+import { filter } from 'rxjs/operators';
 
 import { TodoService } from 'src/app/services/todo.service';
 import { AddTodoRequestObject } from 'src/app/interfaces/todo';
-import { moveItemInArray, CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 
 import * as moment from 'moment';
 
@@ -86,6 +86,4 @@ export class TodoComponent implements OnInit {
   checkPast(date: string) {
     return moment(date).isBefore(moment())
   }
-
-
 }

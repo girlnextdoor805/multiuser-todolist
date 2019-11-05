@@ -26,7 +26,7 @@ export class SigninComponent implements OnInit {
 
   authenticate() {
     this.authService.authenticate(this.form.value).subscribe(response => {
-      console.log(response)
+      // console.log(response)
       this.router.navigate(['todo'])
     })
   }

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { JexiaService } from './jexia.service';
+import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
+import { groupBy } from 'lodash-es';
+import { JexiaService } from './jexia.service';
 import { AddTodoRequestObject, Todo } from '../interfaces/todo';
-import { groupBy, orderBy } from 'lodash-es';
 
 import * as moment from 'moment';
 @Injectable({
@@ -17,6 +18,7 @@ export class TodoService {
 
   constructor(
     private http: HttpClient,
+    private router: Router,
     private jexiaService: JexiaService,
   ) {
     this.setupSocket();
@@ -60,6 +62,12 @@ export class TodoService {
 
       // console.log(lists)
       this.todos$.next(lists.sort((a, b) => moment(a.id).diff(b.id)));
+    }, error => {
+      if (error.status === 401) {
+        this.jexiaService.removeAccessToken();
+        this.socket.close();
+        this.router.navigate(['/signin']);
+      }
     });
   }
 
