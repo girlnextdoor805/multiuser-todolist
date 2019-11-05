@@ -6,6 +6,9 @@ import { TodoService } from 'src/app/services/todo.service';
 import { AddTodoRequestObject } from 'src/app/interfaces/todo';
 import { moveItemInArray, CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 
+import * as moment from 'moment';
+
+
 
 @Component({
   selector: 'app-todo',
@@ -27,15 +30,13 @@ export class TodoComponent implements OnInit {
 
     this.todoService.todos$.pipe(
       filter(todos => !!todos),
-      // map(lessons => lessons.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()))
-    ).subscribe(todo => {
-      console.log(todo)
+    ).subscribe(todos => {
 
-      for (const list of todo) {
+      for (const list of todos) {
         this.connectedTo.push(list.id);
       }
 
-      this.todos = todo;
+      this.todos = todos;
     });
 
     this.todoService.getTodos();
@@ -60,23 +61,30 @@ export class TodoComponent implements OnInit {
   }
 
   deleteTodo($event, item) {
+    // console.log(item)
     $event.preventDefault();
     $event.stopImmediatePropagation();
     this.todoService.deleteTodo(item).subscribe(response => {
-      console.log('yo resposta', response)
+      // console.log('yo resposta', response)
     })
   }
 
   drop(ev: CdkDragDrop<any[]>, todos, date: string) {
 
     if (ev.previousContainer === ev.container) {
-      console.log('move-mos', ev, todos, date);
+      // console.log('move-mos', ev, todos, date);
       moveItemInArray(ev.container.data, ev.previousIndex, ev.currentIndex);
     } else {
-      console.log('transfere-mos',ev.previousIndex, ev.currentIndex, ev, todos, date);
+      // console.log('transfere-mos',ev.previousContainer.data[ev.previousIndex]);
+      this.todoService.rescheduleTodo(ev.previousContainer.data[ev.previousIndex], date).subscribe(response => {
+        // console.log(response)
+      })
       transferArrayItem(ev.previousContainer.data, ev.container.data, ev.previousIndex, ev.currentIndex);
-      // console.log(event.container.data)
     }
+  }
+
+  checkPast(date: string) {
+    return moment(date).isBefore(moment())
   }
 
 

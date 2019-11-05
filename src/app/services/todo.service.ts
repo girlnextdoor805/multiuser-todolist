@@ -3,8 +3,9 @@ import { JexiaService } from './jexia.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { AddTodoRequestObject, Todo } from '../interfaces/todo';
-import { groupBy } from 'lodash-es';
+import { groupBy, orderBy } from 'lodash-es';
 
+import * as moment from 'moment';
 @Injectable({
   providedIn: 'root'
 })
@@ -42,10 +43,12 @@ export class TodoService {
   }
 
   getTodos() {
-    console.log('buscar todos');
     const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`);
-    this.http.get<Todo[]>(this.dataset, {headers}).subscribe(todos => {
-      console.log(todos)
+    const params = new HttpParams().append('sort', '{"direction":"asc","fields":["date"]}');
+    this.http.get<Todo[]>(this.dataset, {
+      headers, 
+      // params
+    }).subscribe(todos => {
       const groupedTodos = groupBy(todos, 'date');
       const lists = [];
       for (const group in groupedTodos) {
@@ -54,8 +57,9 @@ export class TodoService {
           lists.push({id: group, list});
         }
       }
-      // console.log(lists);
-      this.todos$.next(lists);
+
+      // console.log(lists)
+      this.todos$.next(lists.sort((a, b) => moment(a.id).diff(b.id)));
     });
   }
 
@@ -76,15 +80,11 @@ export class TodoService {
 
     this.socket.onmessage = ev => {
       const event = JSON.parse(ev.data);
-      console.log('yo', event);
-      console.log(event.data.action);
+
       switch (event.data.action) {
         case 'created': console.log(event); this.getTodos(); break;
         case 'updated': console.log(event); this.getTodos(); break;
         case 'deleted': console.log(event); this.getTodos(); break;
-
-        default:
-          break;
       }
     }
   }
@@ -94,5 +94,11 @@ export class TodoService {
     const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`);
     const params = new HttpParams().append('cond',`[{"field":"id"},"=","${todo.id}"]`);
     return this.http.patch(this.dataset, {completed: todo.completed}, {headers, params});
+  }
+  rescheduleTodo(todo: any, date: string) {
+    console.log('vou marcar o ', todo.id);
+    const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`);
+    const params = new HttpParams().append('cond',`[{"field":"id"},"=","${todo.id}"]`);
+    return this.http.patch(this.dataset, {date}, {headers, params});
   }
 }

@@ -17,6 +17,12 @@
             flex-direction: column;
             padding: 40px;
 
+            > div.list {
+                h3.past {
+                    color: red;
+                }
+            }
+
             > div.list > div.drop-zone{
                 // border: 1px dashed red;
                 background-color: white;
