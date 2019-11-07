@@ -86,4 +86,13 @@ export class TodoComponent implements OnInit {
   checkPast(date: string) {
     return moment(date).isBefore(moment())
   }
+
+  trackDays(index,item) {
+    return item.id;
+  }
+
+  checkAge(todo) {
+    const seconds = moment().diff(moment(todo.created_at), 'seconds');
+    return seconds < 60 ? true : false;
+  }
 }

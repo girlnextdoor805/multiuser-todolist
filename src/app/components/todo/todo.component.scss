@@ -32,6 +32,26 @@
                 > div.todo-container {
                     display: flex;
 
+                    @-webkit-keyframes yellow-fade {   
+                        0% {background: yellow;}
+                        100% {background: none;}
+                     }
+                     
+                     @keyframes yellow-fade {
+                        0% {background: yellow;}
+                        100% {background: none;}
+                     }
+                     
+                    &.highlight {
+                        -webkit-animation: yellow-fade 2s ease-in 1;
+                        animation: yellow-fade 2s ease-in 1;
+                    }
+
+                    &.completed {
+                        text-decoration: line-through;
+                        color: gray;
+                    }
+
                     button.drag {
                         cursor: grab;
                     }

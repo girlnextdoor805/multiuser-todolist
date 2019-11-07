@@ -1,7 +1,7 @@
 <app-header></app-header>
 <div id="todos-container">
     <div id="todo-list" *ngIf="todos">
-        <ng-container *ngFor="let day of todos; let dayindex = index;">
+        <ng-container *ngFor="let day of todos; let dayindex = index; trackBy:trackDays">
             <div id="{{day.id}}" class="list" 
             [cdkDropListData]="day.list"
             (cdkDropListDropped)="drop($event, day.list, day.id)"
@@ -11,7 +11,7 @@
                 <h3 matSubheader [ngClass]="{'past': checkPast(day.id)}" *ngIf="day.id === 'null'">No Due Date</h3>
 
                 <div class="drop-zone">
-                    <div cdkDrag class="todo-container mat-elevation-z2" cdkDragLockAxis="y" *ngFor="let todo of day.list">
+                    <div cdkDrag class="todo-container mat-elevation-z2" [ngClass]="{'highlight': checkAge(todo), 'completed': todo.completed}" cdkDragLockAxis="y" *ngFor="let todo of day.list; trackBy:trackDays">
                         <button mat-icon-button cdkDragHandle class="drag"><mat-icon>drag_handle</mat-icon></button>
                         <button mat-icon-button (click)="markAsCompleted(todo)"><mat-icon>{{todo.completed ? 'check_box' : 'check_box_outline_blank'}}</mat-icon></button>
                         <div class="todo-detail"><span mat-line>{{todo.todo}}</span></div>
