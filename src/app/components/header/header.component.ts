@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { ProfileComponent } from '../profile/profile.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-header',
@@ -11,10 +13,17 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private dialogService: MatDialog,
     private authService: AuthService
   ) { }
 
   ngOnInit() {
+  }
+
+  openProfile() {
+    this.dialogService.open(ProfileComponent, {
+      disableClose: true
+    });
   }
 
   signOut() {

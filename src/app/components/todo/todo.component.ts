@@ -7,6 +7,8 @@ import { TodoService } from 'src/app/services/todo.service';
 import { AddTodoRequestObject } from 'src/app/interfaces/todo';
 
 import * as moment from 'moment';
+import { MatDialog } from '@angular/material';
+import { ProfileComponent } from '../profile/profile.component';
 
 
 

@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule} from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatToolbarModule, MatListModule, MatInputModule, MatButtonModule, MatDividerModule, MatLineModule, MatIconModule, MatCardModule, MatDatepickerModule, MatNativeDateModule, MatMenuModule } from "@angular/material";
+import { MatToolbarModule, MatListModule, MatInputModule, MatButtonModule, MatDividerModule, MatLineModule, MatIconModule, MatCardModule, MatDatepickerModule, MatNativeDateModule, MatMenuModule, MatDialogModule } from "@angular/material";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
@@ -18,6 +18,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MomentModule } from "ngx-moment";
+import { ProfileComponent } from './components/profile/profile.component';
 
 // const config: SocketIoConfig = { url: environment.jexia.projectURL, options: {} };
 @NgModule({
@@ -26,8 +27,10 @@ import { MomentModule } from "ngx-moment";
     SigninComponent,
     SignupComponent,
     HeaderComponent,
-    TodoComponent
+    TodoComponent,
+    ProfileComponent
   ],
+  entryComponents: [ProfileComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -40,6 +43,7 @@ import { MomentModule } from "ngx-moment";
     MatButtonModule,
     MatCardModule,
     MatDatepickerModule,
+    MatDialogModule,
     MatDividerModule,
     MatIconModule,
     MatInputModule,
