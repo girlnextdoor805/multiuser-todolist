@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { moveItemInArray, CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
-import { filter } from 'rxjs/operators';
+import { filter, tap, switchMap } from 'rxjs/operators';
 
 import { TodoService } from 'src/app/services/todo.service';
 import { AddTodoRequestObject } from 'src/app/interfaces/todo';
@@ -9,6 +9,8 @@ import { AddTodoRequestObject } from 'src/app/interfaces/todo';
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material';
 import { ProfileComponent } from '../profile/profile.component';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserResponseObject } from 'src/app/interfaces/auth';
 
 
 
@@ -20,15 +22,33 @@ import { ProfileComponent } from '../profile/profile.component';
 export class TodoComponent implements OnInit {
   form: FormGroup;
   todos: any[];
+  users: UserProfileResponseObject[] = [];
   connectedTo: string[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
+    private dialogService: MatDialog,
+    private authService: AuthService,
     private todoService: TodoService,
   ) {}
 
   ngOnInit() {
-    this.form = this.formBuilder.group({todo: [null, Validators.required], date: null});
+    this.form = this.formBuilder.group({
+      todo: [null, Validators.required],
+      date: null,
+      user_id: [null, Validators.required]
+    });
+
+    this.authService.getUser().pipe(
+      tap(user =>  this.form.get('user_id').setValue(user.id)),
+      switchMap(user => this.authService.getUserProfile(user.id))
+    ).subscribe(profile => {
+      if (!profile.length) {
+        this.dialogService.open(ProfileComponent, {disableClose: true});
+      }
+    })
+
+    this.authService.getUsers().subscribe(response => this.users = response)
 
     this.todoService.todos$.pipe(
       filter(todos => !!todos),
@@ -40,6 +60,7 @@ export class TodoComponent implements OnInit {
 
       this.todos = todos;
     });
+
 
     this.todoService.getTodos();
     this.todoService.subscribeToTodos();
@@ -69,6 +90,14 @@ export class TodoComponent implements OnInit {
     this.todoService.deleteTodo(item).subscribe(response => {
       // console.log('yo resposta', response)
     })
+  }
+  getUserName(user_id: string) {
+    const user = this.users.filter(user => user.user_id === user_id)[0];
+    if (user) {
+      return `${user.first_name} ${user.last_name}`;
+    } else {
+      return null;
+    }
   }
 
   drop(ev: CdkDragDrop<any[]>, todos, date: string) {

@@ -1,6 +1,7 @@
 export interface AddTodoRequestObject {
     todo: string;
     order: number;
+    user_id: string;
     completed: boolean;
     date: Date;
 }

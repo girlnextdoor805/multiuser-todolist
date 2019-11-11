@@ -14,7 +14,11 @@
                     <div cdkDrag class="todo-container mat-elevation-z2" [ngClass]="{'highlight': checkAge(todo), 'completed': todo.completed}" cdkDragLockAxis="y" *ngFor="let todo of day.list; trackBy:trackDays">
                         <button mat-icon-button cdkDragHandle class="drag"><mat-icon>drag_handle</mat-icon></button>
                         <button mat-icon-button (click)="markAsCompleted(todo)"><mat-icon>{{todo.completed ? 'check_box' : 'check_box_outline_blank'}}</mat-icon></button>
-                        <div class="todo-detail"><span mat-line>{{todo.todo}}</span></div>
+                        <div class="todo-detail">
+                            <span mat-line>{{todo.todo}}</span>
+                            <span class="spacer"></span>
+                            <span mat-line>{{getUserName(todo.user_id)}}</span>
+                        </div>
                         <!-- <button mat-icon-button mat-datepicker-toggle><mat-icon>today</mat-icon></button> -->
                         <button mat-icon-button (click)="deleteTodo($event, todo.id)"><mat-icon>delete</mat-icon></button>
                         <div class="example-custom-placeholder" *cdkDragPlaceholder></div>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { UserProfileRequestObject } from 'src/app/interfaces/auth';
 import { tap, switchMap } from 'rxjs/operators';
@@ -17,8 +17,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private dialogRef: MatDialogRef<ProfileComponent>,
     private authService: AuthService,
-    private dialog: MatDialogRef<ProfileComponent>,
   ) { }
 
   ngOnInit() {
@@ -44,10 +44,8 @@ export class ProfileComponent implements OnInit {
     this.authService.setProfile(this.form.value as UserProfileRequestObject)
     .subscribe(response => {
       // console.log(response);
-
-      this.dialog.close();
+      this.dialogRef.close();
     })
-    // this.dialog.close();
   }
 
   onNoClick(): void {

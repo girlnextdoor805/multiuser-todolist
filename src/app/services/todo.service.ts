@@ -50,7 +50,9 @@ export class TodoService {
     this.http.get<Todo[]>(this.dataset, {
       headers, 
       // params
-    }).subscribe(todos => {
+    }).pipe(
+
+    ).subscribe(todos => {
       const groupedTodos = groupBy(todos, 'date');
       const lists = [];
       for (const group in groupedTodos) {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { JexiaService } from './jexia.service';
-import { signUpResponseObject, signUpRequestObject, authenticateUMSRequestObject, authenticateUMSResponseObject, UserProfileRequestObject, UserResponseObject } from '../interfaces/auth';
+import { signUpResponseObject, signUpRequestObject, authenticateUMSRequestObject, authenticateUMSResponseObject, UserProfileRequestObject, UserResponseObject, UserProfileResponseObject } from '../interfaces/auth';
 import { tap } from "rxjs/operators";
 
 @Injectable({
@@ -40,10 +40,15 @@ export class AuthService {
     return this.http.get<UserResponseObject>(`${this.jexiaService.base}/ums/user`, {headers})
   }
 
+  getUsers() {
+    const headers = this.getHeaders();
+    return this.http.get<UserProfileResponseObject[]>(this.dataset, {headers})
+  }
+
   getUserProfile(user_id: string) {
     const headers = this.getHeaders();
     const params = new HttpParams().append('cond',`[{"field":"user_id"},"=","${user_id}"]`);
-    return this.http.get(this.dataset, {headers, params})
+    return this.http.get<any[]>(this.dataset, {headers, params})
   }
 
 

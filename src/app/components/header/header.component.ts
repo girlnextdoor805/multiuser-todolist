@@ -21,9 +21,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openProfile() {
-    this.dialogService.open(ProfileComponent, {
-      disableClose: true
-    });
+    this.dialogService.open(ProfileComponent);
   }
 
   signOut() {
