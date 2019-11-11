@@ -28,7 +28,7 @@ export class TodoService {
     try {
       this.socket = new WebSocket(this.jexiaService.getRTC())
     } catch (error) {
-      console.warn(error)
+      // console.warn(error)
     }
   }
 
@@ -46,14 +46,12 @@ export class TodoService {
 
   getTodos() {
     const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`);
-    const params = new HttpParams().append('sort', '{"direction":"asc","fields":["date"]}');
-    this.http.get<Todo[]>(this.dataset, {
-      headers, 
-      // params
-    }).pipe(
-
-    ).subscribe(todos => {
-      const groupedTodos = groupBy(todos, 'date');
+    this.http.get<Todo[]>(this.dataset, {headers}).subscribe(todos => {
+      const groupedTodos = groupBy(todos.sort((a, b) => {
+        if (a.todo > b.todo) return 1;
+        if (b.todo > a.todo) return -1;
+        return 0;
+      }), 'date');
       const lists = [];
       for (const group in groupedTodos) {
         if (groupedTodos.hasOwnProperty(group)) {
@@ -92,21 +90,20 @@ export class TodoService {
       const event = JSON.parse(ev.data);
 
       switch (event.data.action) {
-        case 'created': console.log(event); this.getTodos(); break;
-        case 'updated': console.log(event); this.getTodos(); break;
-        case 'deleted': console.log(event); this.getTodos(); break;
+        case 'created': this.getTodos(); break;
+        case 'updated': this.getTodos(); break;
+        case 'deleted': this.getTodos(); break;
       }
     }
   }
 
   markAsCompleted(todo: any) {
-    console.log('vou marcar o ', todo.id);
     const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`);
     const params = new HttpParams().append('cond',`[{"field":"id"},"=","${todo.id}"]`);
     return this.http.patch(this.dataset, {completed: todo.completed}, {headers, params});
   }
+
   rescheduleTodo(todo: any, date: string) {
-    console.log('vou marcar o ', todo.id);
     const headers = new HttpHeaders().append('Authorization', `Bearer ${this.jexiaService.getAccessToken()}`);
     const params = new HttpParams().append('cond',`[{"field":"id"},"=","${todo.id}"]`);
     return this.http.patch(this.dataset, {date}, {headers, params});

@@ -24,10 +24,12 @@ export class AuthService {
   }
 
 
-  setProfile(todo: UserProfileRequestObject) {
+  setProfile(profile: UserProfileRequestObject, update: boolean) {
     const headers = this.getHeaders();
-    // todo = {...todo, completed: false, order: 1};
-    return this.http.post<UserProfileRequestObject>(this.dataset, todo, {headers})
+    const params = new HttpParams().append('cond', `[{"field":"user_id"},"=","${profile.user_id}"]`);
+    const post = this.http.post<UserProfileRequestObject>(this.dataset, profile, {headers});
+    const patch = this.http.patch<UserProfileRequestObject>(this.dataset, profile, {headers, params});
+    return update ? patch : post;
   }
 
   authenticate(user: authenticateUMSRequestObject) {

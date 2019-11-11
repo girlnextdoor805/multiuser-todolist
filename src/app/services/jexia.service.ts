@@ -32,9 +32,9 @@ export class JexiaService {
         key: this.key,
         secret: this.secret
       })
-      console.log('cliente', this.client)
+      // console.log('cliente', this.client)
     } catch (error) {
-      console.log('error', error)
+      // console.log('error', error)
       
     }
   }

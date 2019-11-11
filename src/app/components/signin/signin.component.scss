@@ -13,10 +13,15 @@
         align-self: center;
         width: 300px;
 
-        button{
-            width: 50%;
-            margin: 0 auto;
-            text-transform: uppercase;
+        div#button-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            button{
+                width: 125px;
+                text-transform: uppercase;
+            }
         }
     }
 }

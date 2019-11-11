@@ -30,7 +30,7 @@ export class SignupComponent implements OnInit {
     const user = this.form.value;
     delete user.confirm;
     this.authService.signUp(user).subscribe(response => {
-      console.log(response)
+      // console.log(response)
       this.router.navigate(['/signin']);
     });
   }

@@ -6,5 +6,8 @@
     <mat-form-field class="example-full-width">
         <input matInput type="password" formControlName="password" placeholder="Password">
     </mat-form-field>
-    <button mat-raised-button [disabled]="!form.valid" (click)="authenticate()" color="primary" type="button">Login Now</button>
+    <div id="button-container">
+        <button mat-raised-button [disabled]="!form.valid" (click)="authenticate()" color="primary" type="button">Login Now</button>
+        <button mat-raised-button routerLink="/signup" color="secondary" type="button">Sign Up</button>
+    </div>
 </div>

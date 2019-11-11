@@ -15,9 +15,11 @@
                         <button mat-icon-button cdkDragHandle class="drag"><mat-icon>drag_handle</mat-icon></button>
                         <button mat-icon-button (click)="markAsCompleted(todo)"><mat-icon>{{todo.completed ? 'check_box' : 'check_box_outline_blank'}}</mat-icon></button>
                         <div class="todo-detail">
-                            <span mat-line>{{todo.todo}}</span>
-                            <span class="spacer"></span>
-                            <span mat-line>{{getUserName(todo.user_id)}}</span>
+                            <span class="what" mat-line>{{todo.todo}}</span>
+                            <span class="who" mat-line>
+                                <mat-icon>person</mat-icon>
+                                {{getUserName(todo.user_id)}}
+                            </span>
                         </div>
                         <!-- <button mat-icon-button mat-datepicker-toggle><mat-icon>today</mat-icon></button> -->
                         <button mat-icon-button (click)="deleteTodo($event, todo.id)"><mat-icon>delete</mat-icon></button>
@@ -34,14 +36,16 @@
     </div>
 </div>
 <mat-card id="todo-form" [formGroup]="form">
-    <mat-form-field class="example-full-width">
-        <input matInput placeholder="What?" formControlName="todo">
-    </mat-form-field>
-    <mat-form-field>
-        <input matInput (focus)="picker.open()" [matDatepicker]="picker" formControlName="date" placeholder="When?">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+    <div>
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="What?" formControlName="todo">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput (focus)="picker.open()" [matDatepicker]="picker" formControlName="date" placeholder="When?">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
     <button mat-fab color="primary" (click)="addTodo()" type="button">
         <mat-icon aria-hidden="false" aria-label="Example home icon">add</mat-icon>
     </button>

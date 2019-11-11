@@ -10,7 +10,7 @@ import * as moment from 'moment';
 import { MatDialog } from '@angular/material';
 import { ProfileComponent } from '../profile/profile.component';
 import { AuthService } from 'src/app/services/auth.service';
-import { UserResponseObject } from 'src/app/interfaces/auth';
+import { UserProfileResponseObject } from 'src/app/interfaces/auth';
 
 
 
@@ -61,7 +61,6 @@ export class TodoComponent implements OnInit {
       this.todos = todos;
     });
 
-
     this.todoService.getTodos();
     this.todoService.subscribeToTodos();
   }
@@ -70,16 +69,16 @@ export class TodoComponent implements OnInit {
     const todo = this.form.value as AddTodoRequestObject;
 
     this.todoService.addTodo(todo).subscribe(response => {
-      console.log(response)
-      this.form.reset();
+      this.form.get('todo').reset();
+      this.form.get('date').reset();
     })
   }
 
   markAsCompleted(todo: any) {
-    console.log(todo)
+    // console.log(todo)
     todo.completed = !todo.completed;
     this.todoService.markAsCompleted(todo).subscribe(response => {
-      console.log(response)
+      // console.log(response)
     })
   }
 
@@ -93,11 +92,7 @@ export class TodoComponent implements OnInit {
   }
   getUserName(user_id: string) {
     const user = this.users.filter(user => user.user_id === user_id)[0];
-    if (user) {
-      return `${user.first_name} ${user.last_name}`;
-    } else {
-      return null;
-    }
+    return user ? `${user.first_name} ${user.last_name}` : null;
   }
 
   drop(ev: CdkDragDrop<any[]>, todos, date: string) {
@@ -115,7 +110,7 @@ export class TodoComponent implements OnInit {
   }
 
   checkPast(date: string) {
-    return moment(date).isBefore(moment())
+    return moment(date).isBefore(moment(), 'day')
   }
 
   trackDays(index,item) {

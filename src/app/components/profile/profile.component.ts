@@ -13,7 +13,8 @@ import { tap, switchMap } from 'rxjs/operators';
 })
 export class ProfileComponent implements OnInit {
   form: FormGroup;
-  user$: Subscription;
+  private user$: Subscription;
+  private update = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,17 +35,21 @@ export class ProfileComponent implements OnInit {
       user_id: [null, Validators.required]
     })
     this.user$ = this.authService.getUser().pipe(
-      tap(user =>  this.form.get('user_id').setValue(user.id)),
+      tap(user => this.form.get('user_id').setValue(user.id)),
       switchMap(user => this.authService.getUserProfile(user.id))
-    ).subscribe(profile => this.form.patchValue(profile[0]))
+    ).subscribe(profile => {
+      if (profile.length) {
+        this.update = true;
+        this.form.patchValue(profile[0])
+      }
+    })
   }
 
   setProfile() {
-    // console.log(this.form.value);
-    this.authService.setProfile(this.form.value as UserProfileRequestObject)
-    .subscribe(response => {
-      // console.log(response);
-      this.dialogRef.close();
+    this.authService.setProfile(this.form.value as UserProfileRequestObject, this.update)
+    .subscribe(() => {
+      this.user$.unsubscribe();
+      this.dialogRef.close()
     })
   }
 
